@@ -10,12 +10,23 @@
     <form action="{{ url_for('add_article') }}" method="post">
         <label for="url">Article URL:</label><br>
         <input type="text" id="url" name="url" required><br><br>
-        <label for="label">Label:</label><br>
-        <select id="label" name="label" required>
+        
+        <label for="label">Labels:</label><br>
+        <select id="label" name="label" multiple required>
             <option value="Pro-Israel">Pro-Israel</option>
             <option value="Pro-Palestinian">Pro-Palestinian</option>
             <option value="Center">Center</option>
+            <option value="Right">Right</option>
+            <option value="Left">Left</option>
+            <option value="Pro-Abortion">Pro-Abortion</option>
+            <option value="Anti-Abortion">Anti-Abortion</option>
+            <option value="Communist">Communist</option>
+            <option value="Capitalist">Capitalist</option>
         </select><br><br>
+
+        <label for="funding">Funding:</label><br>
+        <input type="text" id="funding" name="funding" required><br><br>
+
         <input type="submit" value="Add Article">
     </form>
 </body>
