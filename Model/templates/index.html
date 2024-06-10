@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Article</title>
+</head>
+<body>
+    <h1>Add Article</h1>
+    <form action="{{ url_for('add_article') }}" method="post">
+        <label for="url">Article URL:</label><br>
+        <input type="text" id="url" name="url" required><br><br>
+        <label for="label">Label:</label><br>
+        <select id="label" name="label" required>
+            <option value="Pro-Israel">Pro-Israel</option>
+            <option value="Pro-Palestinian">Pro-Palestinian</option>
+            <option value="Center">Center</option>
+        </select><br><br>
+        <input type="submit" value="Add Article">
+    </form>
+</body>
+</html>

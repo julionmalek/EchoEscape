@@ -9,7 +9,7 @@ from lime.lime_text import LimeTextExplainer
 import numpy as np
 
 # Read the CSV file
-df = pd.read_csv('data.csv')
+df = pd.read_csv('labeled_articles.csv')
 
 print(df['label'].value_counts())
 
@@ -52,7 +52,7 @@ predicted_labels = model.predict(texts)
 print(predicted_labels)
 
 # Use LIME to explain the prediction
-explainer = LimeTextExplainer(class_names=['Pro-Israel', 'pro-palestinian', 'center'])
+explainer = LimeTextExplainer(class_names=['Pro-Israel', 'Pro-Palestinian', 'Center'])
 idx = 0  # index of the text you want to explain
 exp = explainer.explain_instance(texts[idx], model.predict_proba, num_features=10)
 
