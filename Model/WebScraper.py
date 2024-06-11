@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import nltk
@@ -33,29 +34,6 @@ def extract_title(html):
     title = title_tag.get_text(strip=True) if title_tag else 'No Title Found'
     return title
 
-def extract_authors(html):
-    # Parse the HTML
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    # Define a function to match class names containing the word "author"
-    def author_class(tag):
-        if tag.has_attr('class'):
-            for class_name in tag['class']:
-                if 'author' in class_name.lower():
-                    return True
-        return False
-
-    # Find all tags with classes containing the word "author"
-    author_tags = soup.find_all(author_class)
-    authors = [tag.get_text(strip=True) for tag in author_tags]
-    
-    # If no authors found, use a default value
-    if not authors:
-        print('No authors found')
-        authors = ['No Authors Found']
-    
-    return authors
-
 def clean_html(html):
     # Parse the HTML
     soup = BeautifulSoup(html, 'html.parser')
@@ -75,17 +53,26 @@ def clean_text(text):
     text = text.strip()
     return text
 
-def label_and_save_to_mongo(title, text, labels, authors, funding, url):
+def label_and_save_to_mongo(title, text, labels, funding, url, date):
+
+    
     # Create a document and insert into MongoDB
     document = {
         "title": title,
         "text": text,
         "labels": labels,
-        "authors": authors,
         "funding": funding,
-        "link": url
+        "link": url,
+        "date": date
+
     }
-    collection.insert_one(document)
+    
+    # Check for duplicates before inserting
+    if collection.find_one({"link": url}):
+        print(f"Article with URL {url} already exists in the database.")
+    else:
+        collection.insert_one(document)
+        print(f"Article with URL {url} added to the database.")
 
 @app.route('/')
 def index():
@@ -103,15 +90,15 @@ def add_article():
     # Extract the title
     title = extract_title(html)
 
-    # Extract the authors
-    authors = extract_authors(html)
+    #add date of today
+    date = datetime.now().strftime('%Y-%m-%d')
 
     raw_text = clean_html(html)
     cleaned_text = clean_text(raw_text)
     stop_words_removed = remove_stop_words(cleaned_text)
 
     # Label and save the data
-    label_and_save_to_mongo(title, stop_words_removed, labels, authors, funding, url)
+    label_and_save_to_mongo(title, stop_words_removed, labels, funding, url, date)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
