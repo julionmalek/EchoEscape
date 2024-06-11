@@ -7,11 +7,11 @@ EchoEscape is a project currently in development, aimed at providing users with 
 EchoEscape is designed to help users navigate through media bias and misinformation by providing:
 
 **Bias Checker:** 
-Analyze the political bias of an article to determine if it leans left, right, or center.\n
+Analyze the political bias of an article to determine if it leans left, right, or center.
 **Truthfulness Checker:** 
-Assess the credibility of the claims made in the article.\n
+Assess the credibility of the claims made in the article.
 **Article Recommender:** 
-Suggest related articles from different perspectives to give users a more balanced view of the topic.\n
+Suggest related articles from different perspectives to give users a more balanced view of the topic.
 
 **Future Vision**
 
