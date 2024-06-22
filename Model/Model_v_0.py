@@ -7,16 +7,26 @@ from sklearn import metrics
 import joblib
 from lime.lime_text import LimeTextExplainer
 import numpy as np
+import pymongo
 
-# Read the CSV file
-df = pd.read_csv('labeled_articles.csv')
+# MongoDB setup
+client = pymongo.MongoClient("mongodb+srv://julionmalek01:Darkx246!*@cluster0.xzvg5pm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+db = client["echoescape"]
+collection = db["articles"]
 
-print(df['label'].value_counts())
+# Retrieve articles and their bias labels from MongoDB
+cursor = collection.find({}, {"_id": 0, "text": 1, "bias": 1})
+data = list(cursor)
 
+# Create a DataFrame from the retrieved data
+df = pd.DataFrame(data)
+
+# Display bias value counts
+print(df['bias'].value_counts())
 
 # Split the data into training and validation sets with stratified split
 train_texts, val_texts, train_labels, val_labels = train_test_split(
-    df['text'], df['label'], test_size=0.2, random_state=42, stratify=df['label'])
+    df['text'], df['bias'], test_size=0.2, random_state=42, stratify=df['bias'])
 
 # Create a pipeline with TF-IDF vectorization and Logistic Regression
 pipeline = make_pipeline(TfidfVectorizer(), LogisticRegression())
@@ -52,7 +62,7 @@ predicted_labels = model.predict(texts)
 print(predicted_labels)
 
 # Use LIME to explain the prediction
-explainer = LimeTextExplainer(class_names=['Pro-Israel', 'Pro-Palestinian', 'Center'])
+explainer = LimeTextExplainer(class_names=['left', 'center', 'right-leaning', 'left-leaning', 'far-left', 'far-right' 'right'])  # Update class names as per your labels
 idx = 0  # index of the text you want to explain
 exp = explainer.explain_instance(texts[idx], model.predict_proba, num_features=10)
 
